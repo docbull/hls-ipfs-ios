@@ -169,11 +169,13 @@ async function cat(cid, options, ipfs, debug, abortFlag) {
     // Run IPFS cat within IPFS node in the browser, and it pushs the data in the buffer
     // to playback the video.
     // let units = await loadChunk(cid);
-
-    parts.push(units);
-    length += units.length;
-    if (abortFlag[0]) {
-        debug('Cancel reading from ipfs')
+    for await (const buf of ipfs.cat(cid, options)) {
+        parts.push(buf);
+        length += buf.length;
+        if (abortFlag[0]) {
+            debug('Cancel reading from ipfs')
+            break
+        }
     }
 
     const value = new Uint8Array(length)
