@@ -11,8 +11,8 @@ setInterval(() => {
   console.log(`%cReceived data: ${receivedData/1024/1024}`, 'color:orange;');
   consumedData = video.webkitVideoDecodedByteCount/1024/1024 + video.webkitAudioDecodedByteCount/1024/1024;
   console.log(`%cConsumed data: ${consumedData}`, 'color:orange;');
-  // console.log(`%cBitrate: ${(consumedData - last) * 8}`, 'color:blue;');
-  // last = consumedData;
+  console.log(`%cBitrate: ${(consumedData - last) * 8}`, 'color:blue;');
+  last = consumedData;
   cnt++;
 }, 1000);
 
