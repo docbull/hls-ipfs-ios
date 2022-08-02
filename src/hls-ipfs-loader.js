@@ -1,21 +1,5 @@
 'use strict'
 
-let cnt = 0;
-let receivedData = 0;
-let segmentNum = 0;
-let last = 0;
-const video = document.getElementById('video');
-let consumedData = video.webkitVideoDecodedByteCount/1024/1024 + video.webkitAudioDecodedByteCount/1024/1024;
-setInterval(() => {
-  console.log(`%ctime: ${cnt}`, 'color:orange;');
-  console.log(`%cReceived data: ${receivedData/1024/1024}`, 'color:orange;');
-  consumedData = video.webkitVideoDecodedByteCount/1024/1024 + video.webkitAudioDecodedByteCount/1024/1024;
-  console.log(`%cConsumed data: ${consumedData}`, 'color:orange;');
-  console.log(`%cBitrate: ${(consumedData - last) * 8}`, 'color:blue;');
-  last = consumedData;
-  cnt++;
-}, 1000);
-
 class HlsIpfsLoader {
     constructor(config) {
         this.multiChunkReq = 5;
@@ -131,14 +115,6 @@ class HlsIpfsLoader {
         stats.loaded = stats.total = data.length
         stats.tload = Math.max(stats.tfirst, performance.now())
         const response = { url: context.url, data: data }
-
-        ///////////////////////////////////////////////
-        let end = performance.now()
-        receivedData += stats.loaded;
-        stats.bwEstimate = stats.loaded / (end - start)
-        console.log(`%csegment #${segmentNum}: ${stats.bwEstimate/1024}`, 'color: green;');
-        segmentNum++;
-
         callbacks.onSuccess(response, stats, context)
     }, console.error)
   }
