@@ -16,15 +16,11 @@ async function initIPFS(CID) {
     });
 
   } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    let videoSource = '';
-    // var ms = new MediaSource();
-    // video.src = window.URL.createObjectURL(ms);
-    // ms.addEventListener('sourceopen', function (e) {
-    //   var sourceBuffer = ms.addSourceBuffer('video/webm; codecs')
-    // })
-    
-    video.src = videoSource;
     window.alert("iOS is not supported yet, coming soon");
+
+    // iOS does not support Media Source Extensions ...
+    let videoSource = '';
+    video.src = videoSource;
   } else {
     const message = document.createTextNode('📼 Sorry, your browser does not support HLS');
     console.log(message);
