@@ -27,4 +27,29 @@ async function initIPFS(CID) {
   }
 }
 
-export { initIPFS }
+// loadChunk requests video segment using CID and segment name to IPFS nodes.
+async function loadChunk(CID) {
+  return new Promise((resolve) => {
+    fetch(`/load`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      responseType: "blob",
+      redirect: "follow",
+      body: JSON.stringify({
+        CID: CID
+    })
+    })
+    .then((res) => res.blob())
+    .then((data) => {
+      data.arrayBuffer()
+      .then((result) => {
+        let uint = new Uint8Array(result);
+        resolve(uint);
+      })
+    })
+  })
+}
+
+export { initIPFS, loadChunk }
