@@ -19,8 +19,20 @@ async function initIPFS(CID) {
     window.alert("iOS is not supported yet, coming soon");
 
     // iOS does not support Media Source Extensions ...
-    let videoSource = '';
-    video.src = videoSource;
+
+    // loads manifest file from ipfs node, however, it cannot load
+    // segments of the video...
+    let chunk = await loadChunk(`${CID}/master.m3u8`);
+    let length = 0, offset = 0;
+    const parts = [];
+    parts.push(chunk);
+    length += chunk.length;
+    const value = new Uint8Array(length);
+    for (const buf of parts) {
+      value.set(buf, offset);
+    }
+    const blob = new Blob(value);
+    video.src = URL.createObjectURL(blob);
   } else {
     const message = document.createTextNode('📼 Sorry, your browser does not support HLS');
     console.log(message);
