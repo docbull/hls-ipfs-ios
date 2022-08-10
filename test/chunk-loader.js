@@ -2,29 +2,31 @@ import { IPFSHlsMultiChunk } from './hls-ipfs-loader.js';
 
 // initIPFS gets video chunks from IPFS using it's own CID. 
 async function initIPFS(CID) {
+  // let isPaused = false;
   Hls.DefaultConfig.loader = IPFSHlsMultiChunk;
   Hls.DefaultConfig.debug = false;
   const video = document.getElementById('video');
   var options = {
     controls: true,
     autoplay: true,
-    preload: 'auto'
+    preload: 'auto',
+    playsinline: true
   };
-  var player = videojs(video, options);
+  let player = videojs(video, options);
+  // console.log(player);
+  // console.log(player.children_[0]);
 
   if (Hls.isSupported()) {
     const hls = new Hls();
     hls.config.ipfsHash = CID;
     hls.loadSource('master.m3u8');
     hls.attachMedia(video);
+    // hls.attachMedia(player.children_[0]);
     hls.on(Hls.Events.MANIFEST_PARSED, () => {
       player.mediainfo = player.mediainfo || {};
       player.mediainfo.projection = '360';
       // var vr = window.vr = player.vr({projection: 'AUTO', debug: true, forceCardboard: false});
-      player.play();
-      
-      console.log(hls.stats);
-      video.play();
+      // video.play();
     });
   } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
     // window.alert("iOS is not supported yet, coming soon");
@@ -83,3 +85,50 @@ async function loadChunk(CID) {
 }
 
 export { initIPFS, loadChunk }
+
+  // player.hotkeys({
+  //   volumeStep: 0.1,
+  //   seekStep: 5,
+  //   alwaysCaptureHotkeys: true,
+
+  //   playPauseKey: function (e) {
+  //     if(!isPaused) {
+  //       video.pause();
+  //       isPaused = true;
+  //     } else {
+  //       video.play();
+  //       isPaused = false;
+  //     }
+  //   },
+
+  //   customKeys: {
+  //     playAndPauseKey: {
+  //       key: function (e) {
+  //         return (e.which === 83);
+  //       },
+  //       handler: function(player, options, e) {
+  //         if(!isPaused) {
+  //           video.pause();
+  //           isPaused = true;
+  //         } else {
+  //           video.play();
+  //           isPaused = false;
+  //         }
+  //       }
+  //     }
+  //   }
+  // });
+
+  // player.on('click', function(evt) {
+  //   console.log()
+  //   console.log(evt.target);
+  //   if (evt.target.tagName === 'VIDEO') {
+  //     if (!isPaused) {
+  //       video.pause();
+  //       isPaused = true;
+  //     } else {
+  //       video.play();
+  //       isPaused = false;
+  //     }
+  //   }
+  // });
